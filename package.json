@@ -1,0 +1,32 @@
+{
+  "name": "thp2trabajopractico",
+  "version": "1.0.0",
+  "description": "Trabajo Practico THP2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuuHood/THP2TrabajoPractico.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JuuHood/THP2TrabajoPractico/issues"
+  },
+  "homepage": "https://github.com/JuuHood/THP2TrabajoPractico#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.11",
+    "supertest": "^7.1.4"
+  }
+}
