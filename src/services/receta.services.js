@@ -1,0 +1,73 @@
+import { Receta } from "../models/receta.model.js";
+import { RecetaRepository } from "../repositories/receta.repository.js";
+
+export const RecetaService = {
+  // Valida que exista la receta por ID
+  serviceRecetaValidation: async (id) => {
+    const receta = await RecetaRepository.getById(id);
+    if (!receta) return null;
+    return receta;
+  },
+
+  // Obtener todas las recetas
+  serviceGetAllRecetas: async () => {
+    const recetas = await RecetaRepository.getAll();
+    if (!recetas || recetas.length === 0) return null;
+    return recetas;
+  },
+
+  // Crear una nueva receta
+  serviceRecetaCreate: async (recetaData) => {
+    const newReceta = new Receta(
+      null,
+      recetaData.nombre,
+      recetaData.ingredientes,
+      recetaData.instrucciones
+    );
+
+    const createdReceta = await RecetaRepository.create(newReceta);
+    if (!createdReceta) return null;
+
+    return createdReceta;
+  },
+
+  // Eliminar receta por ID
+  serviceRecetaDelete: async (id) => {
+    const deleted = await RecetaRepository.deleteById(id);
+    if (!deleted) return null;
+    return deleted;
+  },
+
+  // Actualizar receta por ID
+  serviceUpdateReceta: async (id, newData) => {
+    const recetaActualizada = await RecetaRepository.updateById(id, newData);
+    if (!recetaActualizada) return null;
+    return recetaActualizada;
+  },
+
+  // Exportar recetas a CSV
+  exportarRecetas: async () => {
+    const recetas = await RecetaRepository.getAll();
+
+    if (!recetas || recetas.length === 0) return null;
+
+    // Ajustá estos campos a como se llaman en tu modelo/DB
+    const fields = ["id", "nombre", "ingredientes", "instrucciones"];
+
+    const { Parser } = await import("json2csv");
+    const fs = await import("fs/promises");
+
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(recetas);
+
+    const filePath = "./src/utils/recetas_export.csv";
+    await fs.writeFile(filePath, csv);
+
+    return filePath;
+  },
+
+  // Eliminar todas las recetas 
+  deleteAll: async () => {
+    return await RecetaRepository.deleteAll();
+  },
+};
