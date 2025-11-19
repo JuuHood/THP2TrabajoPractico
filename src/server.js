@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import { connectDB } from "./config/config.js";
 import dotenv from "dotenv";
-import recetasRoutes from "./routes/receta.routes.js";
+import recetasRoutes from "./router/receta.routes.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +19,7 @@ app.use(express.static("public"));
 
 // manejo de rutas//
 app.use("/api/recetas", recetasRoutes);
+//app.use("/api/recetas", recetasRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
