@@ -3,7 +3,7 @@ import { AuthController } from "../controller/auth.controller.js";
 
 const authRouter = Router();
 
-// Public routes
+// Rutas publicas de autenticación
 authRouter.post("/register", AuthController.register);
 authRouter.post("/login", AuthController.login);
 
