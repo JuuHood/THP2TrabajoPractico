@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/JuuHood/THP2TrabajoPractico#readme",
   "dependencies": {
+    "@supabase/supabase-js": "^2.83.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -30,6 +31,7 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.6",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
     "supertest": "^7.1.4"

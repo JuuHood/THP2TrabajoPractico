@@ -1,5 +1,5 @@
-import { Receta } from "../models/receta.model.js";
-import { RecetaRepository } from "../repositories/receta.repository.js";
+// src/services/receta.service.js
+import { RecetaRepository } from "../repository/receta.repository.js";
 
 export const RecetaService = {
   // Valida que exista la receta por ID
@@ -18,16 +18,13 @@ export const RecetaService = {
 
   // Crear una nueva receta
   serviceRecetaCreate: async (recetaData) => {
-    const newReceta = new Receta(
-      null,
-      recetaData.nombre,
-      recetaData.ingredientes,
-      recetaData.instrucciones
-    );
+    const createdReceta = await RecetaRepository.create({
+      nombre: recetaData.nombre,
+      ingredientes: recetaData.ingredientes,
+      instrucciones: recetaData.instrucciones,
+    });
 
-    const createdReceta = await RecetaRepository.create(newReceta);
     if (!createdReceta) return null;
-
     return createdReceta;
   },
 
@@ -48,10 +45,8 @@ export const RecetaService = {
   // Exportar recetas a CSV
   exportarRecetas: async () => {
     const recetas = await RecetaRepository.getAll();
-
     if (!recetas || recetas.length === 0) return null;
 
-    // Ajustá estos campos a como se llaman en tu modelo/DB
     const fields = ["id", "nombre", "ingredientes", "instrucciones"];
 
     const { Parser } = await import("json2csv");
@@ -66,7 +61,7 @@ export const RecetaService = {
     return filePath;
   },
 
-  // Eliminar todas las recetas 
+  // Eliminar todas las recetas
   deleteAll: async () => {
     return await RecetaRepository.deleteAll();
   },

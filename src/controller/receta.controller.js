@@ -1,4 +1,4 @@
-import { recetaService } from "../services/receta.services.js";
+import { RecetaService } from "../services/receta.services.js";
 // Importamos módulos necesarios para manejar rutas de archivos
 import path from "path"; // Para resolver rutas de archivos
 import { fileURLToPath } from "url"; // Para obtener la URL del archivo actual
