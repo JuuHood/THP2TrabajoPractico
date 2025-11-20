@@ -23,7 +23,7 @@ export const RecetaRepository = {
     return data;
   },
 
-  createOne: async (receta) => {
+  create: async (receta) => {
     const { data, error } = await supabase
       .from("recetas")
       .insert([
