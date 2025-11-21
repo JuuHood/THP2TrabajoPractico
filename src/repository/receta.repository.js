@@ -1,4 +1,4 @@
-import { supabase } from "../config/config.js";
+import { supabase } from "../db/supabase.cnx.js";
 export const RecetaRepository = {
   getById: async (id) => {
     const { data, error } = await supabase
@@ -23,7 +23,7 @@ export const RecetaRepository = {
     return data;
   },
 
-  create: async (receta) => {
+  createOne: async (receta) => {
     const { data, error } = await supabase
       .from("recetas")
       .insert([
@@ -31,6 +31,7 @@ export const RecetaRepository = {
           nombre: receta.nombre,
           ingredientes: receta.ingredientes,
           instrucciones: receta.instrucciones,
+          usuario_id: receta.usuario_id,
         },
       ])
       .select()

@@ -1,23 +1,21 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { LogRepository } from "../repository/log.repository.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const requestLogger = async (req, res, next) => {
+  const start = Date.now();
 
-const logFilePath = path.join(__dirname, '../../logs/requests.log');
+  res.on("finish", async () => {
+    const responseTime = Date.now() - start;
 
-export const requestLogger = (req, res, next) => {
-  const timestamp = new Date().toISOString();
-  const logEntry = `${timestamp} - ${req.method} ${req.originalUrl} - IP: ${req.ip}\n`;
-
-  // Log to console
-  console.log(logEntry.trim());
-
-  // Log to file (append)
-  fs.appendFile(logFilePath, logEntry, (err) => {
-    if (err) {
-      console.error('Error writing to log file:', err);
+    try {
+      await LogRepository.createLog({
+        method: req.method,
+        endpoint: req.originalUrl,
+        status_code: res.statusCode,
+        response_time_ms: responseTime,
+        ip_address: req.ip,
+      });
+    } catch (error) {
+      console.error("Error al guardar el log:", error.message);
     }
   });
 

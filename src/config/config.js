@@ -1,6 +1,6 @@
 // src/config/config.js
 import dotenv from "dotenv";
-import { createClient } from "@supabase/supabase-js";
+
 
 dotenv.config();
 
@@ -15,8 +15,7 @@ export const config = {
   // 🔹 Credenciales para Basic Auth
   BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
   BASIC_AUTH_PASS: process.env.BASIC_AUTH_PASS,
+
+   JWT_SECRET: process.env.JWT_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
 };
-
-// Cliente de Supabase
-export const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_KEY);
-
