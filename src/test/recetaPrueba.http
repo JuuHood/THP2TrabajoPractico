@@ -1,0 +1,45 @@
+
+#GET - Obtener todas las recetas
+GET http://localhost:3000/api/recetas
+
+#GET – Obtener una receta por ID
+GET http://localhost:3000/api/recetas/
+
+
+#POST – Crear receta
+POST http://localhost:3000/api/recetas
+Content-Type: application/json
+
+{
+  "titulo": "Milanesa con puré",
+  "ingredientes": "Carne, pan rallado, huevo, papa, manteca",
+  "tiempo": 45
+}
+
+#PUT – Actualizar receta
+PUT http://localhost:3000/api/recetas/3
+Content-Type: application/json
+
+{
+  "titulo": "Milanesa con ensalada",
+  "ingredientes": "Carne, pan rallado, huevo, lechuga, tomate",
+  "tiempo": 40
+}
+
+#DELETE – Eliminar receta
+DELETE http://localhost:3000/api/recetas/3
+
+
+#GET – Estadísticas#
+GET http://localhost:3000/api/recetas/estadisticas
+
+#GET – Exportar recetas
+GET http://localhost:3000/api/recetas/exportar
+
+#Intentar exportar sin recetas
+DELETE http://localhost:3000/api/recetas/all
+GET http://localhost:3000/api/recetas/exportar
+
+
+
+
