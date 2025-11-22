@@ -2,6 +2,14 @@
 import { RecetaRepository } from "../repository/receta.repository.js";
 
 export const RecetaService = {
+  // Alias for compatibility
+  get serviceRecetaCreation() { return this.serviceRecetaCreate; },
+  get serviceGetAll() { return this.serviceGetAllRecetas; },
+};
+
+export const recetaService = RecetaService;
+
+const RecetaServiceObj = {
   // Valida que exista la receta por ID
   serviceRecetaValidation: async (id) => {
     const receta = await RecetaRepository.getById(id);

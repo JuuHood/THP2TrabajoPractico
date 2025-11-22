@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { RecetaController } from "../controller/receta.controller.js";
-//import { basicAuth } from "../middleware/basicAuth.js";
+import { authenticateToken } from "../middleware/basicAuth.js";
 
 const recetaRouter = Router();
 
-//recetaRouter.use(basicAuth); //Aca estoy implementando la basicAuth para todas las rutas
+// Apply authentication to all recipe routes
+recetaRouter.use(authenticateToken);
 
 // Rutas específicas primero
 recetaRouter.delete("/all", RecetaController.deleteAllRecetas);
 recetaRouter.get("/exportar", RecetaController.recetaExportar);
-
 
 // CRUD de recetas
 recetaRouter.get("/", RecetaController.recetaGetAll);

@@ -31,7 +31,6 @@ export const RecetaRepository = {
           nombre: receta.nombre,
           ingredientes: receta.ingredientes,
           instrucciones: receta.instrucciones,
-         
         },
       ])
       .select()
