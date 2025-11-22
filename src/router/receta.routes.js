@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { RecetaController } from "../controller/receta.controller.js";
-import { authenticateToken } from "../middleware/basicAuth.js";
+import { authenticateToken } from "../middleware/authenticateToken.js";
 
 const recetaRouter = Router();
 
-// Apply authentication to all recipe routes
+// Todas las rutas requieren autenticación vía JWT
 recetaRouter.use(authenticateToken);
 
 // Rutas específicas primero

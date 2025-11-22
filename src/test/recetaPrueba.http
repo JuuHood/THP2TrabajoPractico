@@ -1,0 +1,82 @@
+@baseUrl = http://localhost:3000
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqdWxpQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NjM3NTA4NzMsImV4cCI6MTc2Mzc1MTc3M30.cPtIWHm3-hijHQqXgUatSxDrmDoKZ477EPx0st1K-A0
+
+### 1) Registrar usuario
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Juli",
+  "email": "juli@example.com",
+  "password": "123456"
+}
+
+###
+
+### 2) Login usuario
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juli@example.com",
+  "password": "123456"
+}
+
+# Después de correr esto, copiar el accessToken de la respuesta
+# y pegarlo arriba en @token = ...
+
+###
+
+### 3) Obtener todas las recetas (protegido con JWT)
+GET {{baseUrl}}/api/recetas
+Authorization: Bearer {{token}}
+
+###
+
+### 4) Crear una receta nueva
+POST {{baseUrl}}/api/recetas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Tarta de verduras",
+  "ingredientes": "Harina, huevo, acelga, cebolla",
+  "instrucciones": "Saltear cebolla, mezclar todo, hornear 30 minutos."
+}
+
+###
+
+### 5) Obtener una receta por ID
+GET {{baseUrl}}/api/recetas/2
+Authorization: Bearer {{token}}
+
+###
+
+### 6) Actualizar una receta
+PUT {{baseUrl}}/api/recetas/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Tarta de verduras (actualizada)",
+  "ingredientes": "Harina, huevo, acelga, cebolla, queso",
+  "instrucciones": "Mezclar, agregar queso y hornear 35 minutos."
+}
+
+###
+
+### 7) Borrar una receta
+DELETE {{baseUrl}}/api/recetas/2
+Authorization: Bearer {{token}}
+
+###
+
+### 8) Exportar recetas a CSV
+GET {{baseUrl}}/api/recetas/exportar
+Authorization: Bearer {{token}}
+
+###
+
+### 9) Borrar TODAS las recetas (solo si NODE_ENV === "test")
+DELETE {{baseUrl}}/api/recetas/all
+Authorization: Bearer {{token}}

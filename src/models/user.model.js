@@ -1,9 +1,9 @@
 export class User {
-  constructor(id, username, email, passwordHash, role = 'user') {
+  constructor(id, name, email, password, role = 'user') {
     this.id = id;
-    this.username = username;
+    this.name = name;
     this.email = email;
-    this.passwordHash = passwordHash;
+    this.password = password;
     this.role = role; // e.g., 'user', 'admin'
   }
 }

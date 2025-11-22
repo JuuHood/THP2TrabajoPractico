@@ -1,20 +1,19 @@
-import { supabase } from "../config/config.js";
-import bcrypt from 'bcrypt';
+import { supabase } from "../db/supabase.cnx.js";
+import bcrypt from "bcryptjs";
 
 export const UserRepository = {
   create: async (userData) => {
-    // Hashear contraseña antes de almacenar
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(userData.password, saltRounds);
 
     const { data, error } = await supabase
-      .from("users")
+      .from("usuarios") 
       .insert([
         {
-          username: userData.username,
+          nombre: userData.nombre,          
           email: userData.email,
-          password_hash: passwordHash,
-          role: userData.role || 'user',
+          password: passwordHash,          
+          role: userData.role || "user",
         },
       ])
       .select()
@@ -24,12 +23,13 @@ export const UserRepository = {
       console.error(error);
       return null;
     }
+
     return data;
   },
 
   getByEmail: async (email) => {
     const { data, error } = await supabase
-      .from("users")
+      .from("usuarios")
       .select("*")
       .eq("email", email)
       .single();
@@ -43,7 +43,7 @@ export const UserRepository = {
 
   getById: async (id) => {
     const { data, error } = await supabase
-      .from("users")
+      .from("usuarios")
       .select("*")
       .eq("id", id)
       .single();
@@ -57,7 +57,7 @@ export const UserRepository = {
 
   updateById: async (id, newData) => {
     const { data, error } = await supabase
-      .from("users")
+      .from("usuarios")
       .update(newData)
       .eq("id", id)
       .select()
@@ -72,7 +72,7 @@ export const UserRepository = {
 
   deleteById: async (id) => {
     const { data, error } = await supabase
-      .from("users")
+      .from("usuarios")
       .delete()
       .eq("id", id)
       .select();
