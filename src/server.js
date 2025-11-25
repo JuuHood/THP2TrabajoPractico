@@ -26,6 +26,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.static("public"));
 
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "API Recetas funcionando correctamente ",
+    status: "ok"
+  });
+});
+
 // 🔹 Rate limit
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
