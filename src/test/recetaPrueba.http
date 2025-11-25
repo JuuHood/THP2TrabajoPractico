@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqdWxpQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NjQwMzA2ODEsImV4cCI6MTc2NDAzMTU4MX0.bxOmwkuLf-qXIZxAnY0m--N5lRFl7sUsnXKo285Eduw
-@refreshToken =
+@token = 
+@refreshToken = 
 
 ###############################################
 # 🔐 AUTENTICACIÓN
