@@ -65,4 +65,32 @@ export const AuthController = {
         .json({ error: "Error interno del servidor" });
     }
   },
+
+  refresh: async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res
+        .status(400)
+        .json({ error: "Refresh token es requerido" });
+    }
+
+    try {
+      const result = await UserService.refreshAccessToken(refreshToken);
+
+      if (result.error) {
+        return res.status(401).json({ error: result.error });
+      }
+
+      return res.status(200).json({
+        message: "Token renovado exitosamente",
+        accessToken: result.accessToken,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ error: "Error interno del servidor" });
+    }
+  },
 };
