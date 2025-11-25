@@ -9,6 +9,7 @@ import rateLimit from "express-rate-limit";
 import { recetaRouter } from "./router/receta.routes.js";
 import { authRouter } from "./router/auth.routes.js";
 import { requestLogger } from "./middleware/requestLogger.js";
+import { swaggerUi, swaggerSpec } from "./config/swagger.js";
 
 dotenv.config();
 const app = express();
@@ -32,6 +33,12 @@ const limiter = rateLimit({
   message: "Demasiadas solicitudes desde esta IP, intenta luego."
 });
 app.use(limiter);
+
+// 🔹 Documentación API
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "API Recetas - Documentación",
+}));
 
 // 🔹 Rutas
 app.use("/api/auth", authRouter);

@@ -7,7 +7,8 @@ const recetaRouter = Router();
 // Todas las rutas requieren autenticación vía JWT
 recetaRouter.use(authenticateToken);
 
-// Rutas específicas primero
+// Rutas específicas primero (para evitar conflictos con /:id)
+// Documentación completa en: docs/openapi.yaml
 recetaRouter.delete("/all", RecetaController.deleteAllRecetas);
 recetaRouter.get("/exportar", RecetaController.recetaExportar);
 recetaRouter.get("/estadisticas", RecetaController.getEstadisticas);
@@ -18,6 +19,5 @@ recetaRouter.get("/:id", RecetaController.recetaGetById);
 recetaRouter.post("/", RecetaController.recetaCreateNew);
 recetaRouter.put("/:id", RecetaController.recetaUpdateById);
 recetaRouter.delete("/:id", RecetaController.recetaDeleteOne);
-
 
 export { recetaRouter };

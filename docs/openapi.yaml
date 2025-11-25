@@ -1,0 +1,729 @@
+openapi: 3.0.0
+info:
+  title: API de Recetas - THP2 Trabajo Práctico
+  version: 1.0.0
+  description: |
+    API REST para gestión de recetas con autenticación JWT.
+    
+    **Funcionalidades principales:**
+    - Autenticación de usuarios con JWT (access token + refresh token)
+    - CRUD completo de recetas
+    - Exportación de recetas a CSV
+    - Estadísticas de recetas
+    - Sistema de roles (user/admin)
+    
+    **Seguridad:**
+    - Contraseñas encriptadas con bcrypt
+    - Tokens JWT con expiración
+    - Rate limiting
+    - Helmet para headers de seguridad
+    
+  contact:
+    name: Equipo THP2
+    
+servers:
+  - url: http://localhost:3000
+    description: Servidor de desarrollo
+  - url: https://tu-deploy.com
+    description: Servidor de producción
+
+tags:
+  - name: Autenticación
+    description: Endpoints para registro, login y renovación de tokens
+  - name: Recetas
+    description: Endpoints para gestión de recetas (CRUD, exportar, estadísticas)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Ingrese el token JWT obtenido del endpoint `/api/auth/login`.
+        
+        **Formato:** Bearer {token}
+        
+        **Ejemplo:** Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID único del usuario
+          example: 1
+        nombre:
+          type: string
+          description: Nombre completo del usuario
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          description: Email del usuario
+          example: juan@example.com
+        role:
+          type: string
+          description: Rol del usuario en el sistema
+          example: user
+          enum:
+            - user
+            - admin
+      required:
+        - id
+        - nombre
+        - email
+        - role
+        
+    Receta:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID único de la receta
+          example: 1
+        nombre:
+          type: string
+          description: Nombre de la receta
+          example: Pizza Margherita
+        ingredientes:
+          type: string
+          description: Lista de ingredientes necesarios
+          example: Harina, tomate, mozzarella, albahaca, aceite de oliva
+        instrucciones:
+          type: string
+          description: Pasos detallados para preparar la receta
+          example: Amasar la harina con agua, extender la masa, agregar tomate y queso, hornear a 220°C durante 15 minutos
+        usuario_id:
+          type: integer
+          description: ID del usuario que creó la receta
+          example: 1
+      required:
+        - nombre
+        - ingredientes
+        - instrucciones
+        
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensaje descriptivo del error
+          example: Credenciales inválidas
+
+paths:
+  # ========================================
+  # AUTENTICACIÓN
+  # ========================================
+  
+  /api/auth/register:
+    post:
+      summary: Registrar un nuevo usuario
+      description: Crea una nueva cuenta de usuario en el sistema
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - email
+                - password
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre completo del usuario
+                  example: Juan Pérez
+                email:
+                  type: string
+                  format: email
+                  description: Email único del usuario
+                  example: juan@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Contraseña (será encriptada con bcrypt)
+                  minLength: 6
+                  example: password123
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario registrado exitosamente
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Datos faltantes o inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Nombre, email y contraseña son requeridos
+        '409':
+          description: El usuario ya existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: El usuario ya existe
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Error interno del servidor
+                
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión
+      description: Autentica un usuario y devuelve access token (15 min) y refresh token (7 días)
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email del usuario registrado
+                  example: juan@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Contraseña del usuario
+                  example: password123
+      responses:
+        '200':
+          description: Login exitoso - Tokens generados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Inicio de sesión exitoso
+                  accessToken:
+                    type: string
+                    description: Token de acceso (válido por 15 minutos)
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqdWFuQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIifQ...
+                  refreshToken:
+                    type: string
+                    description: Token de renovación (válido por 7 días)
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0...
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Email o contraseña faltante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Email y contraseña son requeridos
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Credenciales inválidas
+        '500':
+          description: Error interno del servidor
+          
+  /api/auth/refresh:
+    post:
+      summary: Renovar access token
+      description: |
+        Permite obtener un nuevo access token usando un refresh token válido.
+        
+        **Uso:** Cuando el access token expira (15 min), usa este endpoint para obtener uno nuevo sin necesidad de hacer login de nuevo.
+        
+        **El refresh token dura 7 días**, después de eso se debe hacer login nuevamente.
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: Refresh token obtenido del login
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0...
+      responses:
+        '200':
+          description: Token renovado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token renovado exitosamente
+                  accessToken:
+                    type: string
+                    description: Nuevo access token (válido por 15 minutos)
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Refresh token no proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Refresh token es requerido
+        '401':
+          description: Refresh token inválido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Refresh token inválido o expirado
+        '500':
+          description: Error interno del servidor
+
+  # ========================================
+  # RECETAS - CRUD
+  # ========================================
+  
+  /api/recetas:
+    get:
+      summary: Obtener todas las recetas
+      description: Retorna una lista con todas las recetas del sistema
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de recetas obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Receta'
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          description: Token no proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Token de acceso requerido
+        '403':
+          description: Token inválido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Token inválido o expirado
+        '500':
+          description: Error al leer las recetas
+          
+    post:
+      summary: Crear una nueva receta
+      description: Crea una nueva receta asociada al usuario autenticado
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - ingredientes
+                - instrucciones
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre de la receta
+                  example: Pizza Margherita
+                ingredientes:
+                  type: string
+                  description: Lista de ingredientes separados por comas
+                  example: Harina, tomate, mozzarella, albahaca, aceite de oliva
+                instrucciones:
+                  type: string
+                  description: Pasos detallados de preparación
+                  example: Amasar la harina con agua, extender la masa, agregar tomate y queso, hornear 15 minutos
+      responses:
+        '201':
+          description: Receta creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Creado correctamente
+                  payload:
+                    $ref: '#/components/schemas/Receta'
+                  ok:
+                    type: boolean
+                    example: true
+        '400':
+          description: Datos faltantes o inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Nombre, ingredientes e instrucciones son requeridos
+                  ok:
+                    type: boolean
+                    example: false
+        '401':
+          description: Usuario no autenticado
+          
+  /api/recetas/{id}:
+    get:
+      summary: Obtener una receta por ID
+      description: Retorna los detalles de una receta específica
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la receta a buscar
+          example: 1
+      responses:
+        '200':
+          description: Receta encontrada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Success
+                  payload:
+                    $ref: '#/components/schemas/Receta'
+                  ok:
+                    type: boolean
+                    example: true
+        '404':
+          description: Receta no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error, no existe la receta
+                  ok:
+                    type: boolean
+                    example: false
+        '401':
+          description: No autorizado
+          
+    put:
+      summary: Actualizar una receta existente
+      description: Modifica los datos de una receta existente
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la receta a actualizar
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Pizza Napolitana
+                ingredientes:
+                  type: string
+                  example: Harina, tomate, mozzarella fresca, albahaca, aceite
+                instrucciones:
+                  type: string
+                  example: Preparar masa, agregar ingredientes frescos, hornear 12 minutos
+      responses:
+        '200':
+          description: Receta actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Receta modificada
+                  payload:
+                    $ref: '#/components/schemas/Receta'
+                  ok:
+                    type: boolean
+                    example: true
+        '404':
+          description: Receta no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Fallo al actualizar la receta
+                  ok:
+                    type: boolean
+                    example: false
+        '401':
+          description: No autorizado
+          
+    delete:
+      summary: Eliminar una receta
+      description: Elimina una receta específica del sistema
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la receta a eliminar
+          example: 1
+      responses:
+        '200':
+          description: Receta eliminada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Receta borrada satisfactoriamente
+                  payload:
+                    $ref: '#/components/schemas/Receta'
+                  ok:
+                    type: boolean
+                    example: true
+        '404':
+          description: Receta no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No se encontró la receta a borrar
+                  ok:
+                    type: boolean
+                    example: false
+        '401':
+          description: No autorizado
+
+  # ========================================
+  # RECETAS - FUNCIONALIDADES ESPECIALES
+  # ========================================
+  
+  /api/recetas/exportar:
+    get:
+      summary: Exportar todas las recetas a CSV
+      description: |
+        Genera y descarga un archivo CSV con todas las recetas del sistema.
+        
+        **Campos incluidos:** id, nombre, ingredientes, instrucciones
+        
+        Este endpoint es un caso de uso de **complejidad moderada** ya que transforma datos del sistema a un formato exportable.
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Archivo CSV generado y listo para descarga
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+                example: |
+                  "id","nombre","ingredientes","instrucciones"
+                  "1","Pizza","Harina, tomate","Amasar y hornear"
+        '404':
+          description: No hay recetas para exportar
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: No hay recetas para exportar
+                  ok:
+                    type: boolean
+                    example: false
+        '401':
+          description: No autorizado
+        '500':
+          description: Error al exportar
+          
+  /api/recetas/estadisticas:
+    get:
+      summary: Obtener estadísticas de recetas
+      description: |
+        Retorna estadísticas calculadas sobre las recetas del sistema.
+        
+        Este endpoint es un caso de uso de **complejidad moderada/alta** ya que procesa y transforma información para generar indicadores y estadísticas.
+        
+        **Estadísticas incluidas:**
+        - Total de recetas
+        - Recetas por usuario
+        - Ingredientes más usados
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Estadísticas calculadas exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalRecetas:
+                    type: integer
+                    description: Cantidad total de recetas
+                    example: 25
+                  recetasPorUsuario:
+                    type: object
+                    description: Contador de recetas agrupadas por usuario
+                    example:
+                      "Juan Pérez": 10
+                      "María López": 8
+                      "Carlos García": 7
+                  ingredientesMasUsados:
+                    type: array
+                    description: Lista de ingredientes ordenados por frecuencia de uso
+                    items:
+                      type: object
+                      properties:
+                        ingrediente:
+                          type: string
+                          example: Tomate
+                        cantidad:
+                          type: integer
+                          example: 15
+        '401':
+          description: No autorizado
+        '500':
+          description: Error al calcular estadísticas
+          
+  /api/recetas/all:
+    delete:
+      summary: Eliminar TODAS las recetas (Solo testing)
+      description: |
+        **⚠️ ATENCIÓN:** Este endpoint solo funciona si `NODE_ENV=test`
+        
+        Elimina todas las recetas del sistema. Usado exclusivamente para limpiar la base de datos durante pruebas automatizadas.
+        
+        En producción o desarrollo, este endpoint retorna error 403.
+      tags:
+        - Recetas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Todas las recetas eliminadas exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Recetas eliminadas exitosamente
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Receta'
+        '403':
+          description: No autorizado fuera de entorno de testing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No autorizado fuera de entorno de testing
+        '401':
+          description: Token no proporcionado o inválido
+        '500':
+          description: Error al eliminar recetas
+
