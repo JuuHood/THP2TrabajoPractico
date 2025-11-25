@@ -1,12 +1,12 @@
 @baseUrl = http://localhost:3000
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqdWxpQGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NjQwMjkyMDEsImV4cCI6MTc2NDAzMDEwMX0.EuC8xfZyKzH3N10QnWTt7vhtJZLtCtzNt52poW8oy4k
+@token =
 ### 1) Registrar usuario
 POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "nombre": "Tobias",
-  "email": "tobias@example.com",
+  "nombre": "Joaquin",
+  "email": "joaquin@example.com",
   "password": "1234567"
 }
 
@@ -38,15 +38,15 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "nombre": "Tarta de atun",
-  "ingredientes": "Harina, huevo, atun, cebolla",
+  "nombre": "Tarta de ricota",
+  "ingredientes": "Harina, huevo, ricota, cebolla",
   "instrucciones": "Saltear cebolla, mezclar todo, hornear 30 minutos."
 }
 
 ###
 
 ### 5) Obtener una receta por ID
-GET {{baseUrl}}/api/recetas/7
+GET {{baseUrl}}/api/recetas/8
 Authorization: Bearer {{token}}
 
 ###
@@ -65,7 +65,7 @@ Content-Type: application/json
 ###
 
 ### 7) Borrar una receta
-DELETE {{baseUrl}}/api/recetas/4
+DELETE {{baseUrl}}/api/recetas/7
 Authorization: Bearer {{token}}
 
 ###
