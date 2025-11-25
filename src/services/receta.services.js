@@ -41,6 +41,36 @@ export const RecetaService = {
     return updated || null;
   },
 
+  // Este método obtiene estadísticas de las recetas:
+// - total de recetas
+// - cantidad de recetas por usuario
+// - top 3 usuarios con más recetas
+getEstadisticas: async () => {
+  const recetas = await RecetaRepository.getAll();
+  const totalRecetas = recetas.length;
+
+  // Cantidad de recetas por usuario
+  const recetasPorUsuario = {};
+
+  for (const r of recetas) {
+    const usuario = r.usuario_id || "Desconocido";
+    recetasPorUsuario[usuario] = (recetasPorUsuario[usuario] || 0) + 1;
+  }
+
+  // Convertir a array para ordenar
+  const topUsuarios = Object.entries(recetasPorUsuario)
+    .map(([usuario, cantidad]) => ({ usuario, cantidad }))
+    .sort((a, b) => b.cantidad - a.cantidad)  // de mayor a menor
+    .slice(0, 3); // top 3, podés cambiarlo
+
+  return {
+    totalRecetas,
+    recetasPorUsuario,
+    topUsuarios,
+  };
+},
+
+
   // Exportar todas las recetas a CSV
   exportarRecetas: async () => {
     const recetas = await RecetaRepository.getAll();

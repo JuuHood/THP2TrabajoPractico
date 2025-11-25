@@ -10,6 +10,7 @@ recetaRouter.use(authenticateToken);
 // Rutas específicas primero
 recetaRouter.delete("/all", RecetaController.deleteAllRecetas);
 recetaRouter.get("/exportar", RecetaController.recetaExportar);
+recetaRouter.get("/estadisticas", RecetaController.getEstadisticas);
 
 // CRUD de recetas
 recetaRouter.get("/", RecetaController.recetaGetAll);

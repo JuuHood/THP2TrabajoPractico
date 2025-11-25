@@ -110,6 +110,16 @@ export const RecetaController = {
     });
   },
 
+  getEstadisticas: async (req, res) => {
+    try {
+      const estadisticas = await RecetaService.getEstadisticas();
+      res.status(200).json(estadisticas);
+    } catch (error) {
+      console.error("Error al obtener estadísticas:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
+    }
+  },
+
   recetaDeleteOne: async (req, res) => {
     const { id } = req.params;
     const receta = await RecetaService.serviceRecetaValidation(id);
