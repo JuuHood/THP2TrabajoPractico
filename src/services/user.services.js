@@ -57,6 +57,33 @@ export const UserService = {
     };
   },
 
+  refreshAccessToken: async (refreshToken) => {
+    try {
+      // Verificar que el refresh token sea válido
+      const decoded = jwt.verify(refreshToken, config.JWT_REFRESH_SECRET);
+
+      // Buscar el usuario en la base de datos
+      const user = await UserRepository.getById(decoded.id);
+      if (!user) {
+        return { error: "Usuario no encontrado" };
+      }
+
+      // Generar un nuevo access token
+      const newAccessToken = jwt.sign(
+        { id: user.id, email: user.email, role: user.role },
+        config.JWT_SECRET,
+        { expiresIn: "15m" }
+      );
+
+      return {
+        accessToken: newAccessToken,
+      };
+    } catch (error) {
+      // Token inválido o expirado
+      return { error: "Refresh token inválido o expirado" };
+    }
+  },
+
   getUserById: async (id) => {
     const user = await UserRepository.getById(id);
     if (!user) return null;

@@ -21,18 +21,96 @@ Content-Type: application/json
   "password": "123456"
 }
 
-# Después de correr esto, copiar el accessToken de la respuesta
-# y pegarlo arriba en @token = ...
+# Después de correr esto:
+# 1. Copiar el accessToken y pegarlo arriba en @token = ...
+# 2. Copiar el refreshToken y pegarlo arriba en @refreshToken = ...
 
 ###
 
-### 3) Obtener todas las recetas (protegido con JWT)
+### 3) Renovar access token (refresh)
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+# Cuando el accessToken expire (15min), usar este endpoint
+# Copiar el NUEVO accessToken de la respuesta y actualizarlo arriba
+
+###
+
+### 4) ERROR: Refresh sin token
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{}
+
+###
+
+### 5) ERROR: Refresh con token inválido
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "token_invalido_xyz123"
+}
+
+###
+
+### 6) ERROR: Login con email inexistente
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "noexiste@example.com",
+  "password": "123456"
+}
+
+###
+
+### 7) ERROR: Login con contraseña incorrecta
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juli@example.com",
+  "password": "contraseña_incorrecta"
+}
+
+###
+
+### 8) ERROR: Login sin email
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "password": "123456"
+}
+
+###
+
+### 9) ERROR: Login sin contraseña
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juli@example.com"
+}
+
+###
+
+###############################################
+# 🍳 RECETAS - CRUD
+###############################################
+
+### 10) Obtener todas las recetas (protegido con JWT)
 GET {{baseUrl}}/api/recetas
 Authorization: Bearer {{token}}
 
 ###
 
-### 4) Crear una receta nueva
+### 11) Crear una receta nueva
 POST {{baseUrl}}/api/recetas
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -70,13 +148,13 @@ Authorization: Bearer {{token}}
 
 ###
 
-### 8) Exportar recetas a CSV
+### 15) Exportar recetas a CSV
 GET {{baseUrl}}/api/recetas/exportar
 Authorization: Bearer {{token}}
 
 ###
 
-### 9) Borrar TODAS las recetas (solo si NODE_ENV === "test")
+### 16) Borrar TODAS las recetas (solo si NODE_ENV === "test")
 DELETE {{baseUrl}}/api/recetas/all
 Authorization: Bearer {{token}}
 

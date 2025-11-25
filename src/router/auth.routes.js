@@ -6,5 +6,6 @@ const authRouter = Router();
 // Rutas publicas de autenticación
 authRouter.post("/register", AuthController.register);
 authRouter.post("/login", AuthController.login);
+authRouter.post("/refresh", AuthController.refresh);
 
 export { authRouter };
