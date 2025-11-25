@@ -16,6 +16,17 @@ Este trabajo práctico busca que los estudiantes puedan aplicarse como desarroll
 
 ---
 
+## Despliegue
+
+**La API está desplegada y funcionando en:**
+
+- **URL Base:** https://thp2trabajopractico-n1gj.onrender.com
+- **Documentación Interactiva:** https://thp2trabajopractico-n1gj.onrender.com/api/docs
+
+> **Probala directamente desde Swagger UI** - No necesitas instalar nada localmente para probar la API.
+
+---
+
 ## Objetivos
 
 - Integrar en un único trabajo todos los conocimientos adquiridos a lo largo de las materias de programación cursadas y en curso.
@@ -124,9 +135,19 @@ tp2-proyecto-final/
 
 ---
 
-## Instalación y Configuración
+## 🚀 Instalación y Configuración
 
-### **Requisitos Previos**
+> **💡 Tip:** Si solo quieres probar la API, usa la versión en producción:  
+> https://thp2trabajopractico-n1gj.onrender.com/api/docs
+
+### **Entornos Disponibles**
+
+| Entorno | URL | Uso |
+|---------|-----|-----|
+| **🌐 Producción** | https://thp2trabajopractico-n1gj.onrender.com | Pruebas y demostración |
+| **💻 Local** | http://localhost:3000 | Desarrollo |
+
+### **Requisitos Previos** (Solo para desarrollo local)
 - **Node.js** v20 o superior
 - **npm** v10 o superior
 - Cuenta en **Supabase** (para la base de datos)
@@ -191,25 +212,40 @@ El servidor estará disponible en: `http://localhost:3000`
 
 ### **6. Acceder a la Documentación**
 
+**Desarrollo Local:**  
 Abre tu navegador en: **`http://localhost:3000/api/docs`**
+
+**Producción (Ya Desplegado):**  
+También puedes probar la API directamente en producción:  
+**https://thp2trabajopractico-n1gj.onrender.com/api/docs**
 
 ---
 
 ## Documentación de la API
 
+### **Deploy en Producción**
+
+La API está desplegada y accesible en:
+
+**URL de Producción:** https://thp2trabajopractico-n1gj.onrender.com
+
+**Documentación Interactiva:** https://thp2trabajopractico-n1gj.onrender.com/api/docs
+
 ### **Swagger UI Interactivo**
 
 La API cuenta con documentación completa e interactiva generada con **Swagger/OpenAPI 3.0**:
 
-**URL de Documentación:** `http://localhost:3000/api/docs`
+**URLs de Documentación:**
+- **Producción:** https://thp2trabajopractico-n1gj.onrender.com/api/docs
+- **Local:** `http://localhost:3000/api/docs`
 
 **Características de la documentación:**
--  Descripción completa de todos los endpoints
--  Ejemplos de requests y responses
--  Modelos de datos (schemas)
--  Códigos de estado HTTP
--  Interfaz "Try it out" para probar directamente desde el navegador
--  Autenticación JWT integrada (botón "Authorize")
+- ✅ Descripción completa de todos los endpoints
+- ✅ Ejemplos de requests y responses
+- ✅ Modelos de datos (schemas)
+- ✅ Códigos de estado HTTP
+- ✅ Interfaz "Try it out" para probar directamente desde el navegador
+- ✅ Autenticación JWT integrada (botón "Authorize")
 
 **Archivo fuente:** `docs/openapi.yaml` (730 líneas de especificación OpenAPI)
 
@@ -541,32 +577,44 @@ created_at      | TIMESTAMP DEFAULT NOW()
 
 ---
 
-## 📝 Notas Importantes
+## Notas Importantes
 
 ### **Variables de Entorno**
-⚠️ **NUNCA** subas el archivo `.env` al repositorio (debe estar en `.gitignore`)
+**NUNCA** subas el archivo `.env` al repositorio (debe estar en `.gitignore`)
 
 ### **JWT Secrets**
-🔐 Usa cadenas largas y aleatorias en producción (mínimo 32 caracteres)
+Usa cadenas largas y aleatorias en producción (mínimo 32 caracteres)
 
 ### **Base de Datos**
-🗄️ Usuarios y recetas se almacenan en **Supabase** (PostgreSQL en la nube)
+Usuarios y recetas se almacenan en **Supabase** (PostgreSQL en la nube)
 
 ### **Desarrollo**
-📝 El linter Biome está configurado para mantener consistencia en el código
+El linter Biome está configurado para mantener consistencia en el código
 
 ### **Testing**
-🧪 Las pruebas actualmente son **manuales** usando archivos `.http` con REST Client
+Las pruebas actualmente son **manuales** usando archivos `.http` con REST Client
+
+### **Despliegue**
+La aplicación está desplegada en **Render** y es accesible públicamente en:  
+https://thp2trabajopractico-n1gj.onrender.com
 
 ---
 
-##  Enlaces Útiles
+## Enlaces Útiles
 
--  **Documentación API:** `http://localhost:3000/api/docs`
--  **Repositorio GitHub:** https://github.com/JuuHood/THP2TrabajoPractico
--  **Supabase Dashboard:** https://app.supabase.com
--  **OpenAPI 3.0 Spec:** https://swagger.io/specification/
--  **JWT Best Practices:** https://datatracker.ietf.org/doc/html/rfc8725
+### **Proyecto**
+- **API en Producción:** https://thp2trabajopractico-n1gj.onrender.com
+- **Documentación Swagger:** https://thp2trabajopractico-n1gj.onrender.com/api/docs
+- **Repositorio GitHub:** https://github.com/JuuHood/THP2TrabajoPractico
+
+### **Herramientas**
+- **Supabase Dashboard:** https://app.supabase.com
+- **Render Dashboard:** https://dashboard.render.com
+
+### **Documentación Técnica**
+- **OpenAPI 3.0 Spec:** https://swagger.io/specification/
+- **JWT Best Practices:** https://datatracker.ietf.org/doc/html/rfc8725
+- **Express.js Docs:** https://expressjs.com
 
 ---
 
