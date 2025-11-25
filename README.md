@@ -497,7 +497,7 @@ npm run format       # Formatear código con Biome (modifica archivos)
 
 ---
 
-## 🔄 CI/CD Pipeline
+## CI/CD Pipeline
 
 El proyecto implementa **Integración y Despliegue Continuo** con GitHub Actions.
 
@@ -505,10 +505,10 @@ El proyecto implementa **Integración y Despliegue Continuo** con GitHub Actions
 
 Cada vez que hacés `git push` a la rama `main`:
 
-1. 🔍 **Verifica el código** con Biome Linter
-2. 🚀 **Despliega automáticamente** a Render
-3. ✅ **Verifica que la API funcione** (health checks)
-4. 📧 **Te notifica** si algo falló
+1. **Verifica el código** con Biome Linter
+2. **Despliega automáticamente** a Render
+3. **Verifica que la API funcione** (health checks)
+4. **Te notifica** si algo falló
 
 ### **Pipeline Workflow:**
 
@@ -518,9 +518,9 @@ git push → GitHub Actions → Lint → Deploy → Verify → ✅ Done
 
 ### **Ver el Estado:**
 
-- 📊 **Actions Tab:** https://github.com/JuuHood/THP2TrabajoPractico/actions
-- 🟢 Verde = Deploy exitoso
-- 🔴 Rojo = Algo falló (revisa logs)
+- **Actions Tab:** https://github.com/JuuHood/THP2TrabajoPractico/actions
+- Verde = Deploy exitoso
+- Rojo = Algo falló (revisa logs)
 
 ### **Verificar Antes de Push:**
 
