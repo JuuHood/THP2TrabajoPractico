@@ -1,5 +1,9 @@
 # Trabajo Práctico Final - API de Gestión de Recetas
 
+[![CI/CD Pipeline](https://github.com/JuuHood/THP2TrabajoPractico/actions/workflows/deploy.yml/badge.svg)](https://github.com/JuuHood/THP2TrabajoPractico/actions/workflows/deploy.yml)
+[![Deploy](https://img.shields.io/badge/deploy-render-46E3B7)](https://thp2trabajopractico-n1gj.onrender.com)
+[![Docs](https://img.shields.io/badge/docs-swagger-85EA2D)](https://thp2trabajopractico-n1gj.onrender.com/api/docs)
+
 **Equipo de Desarrollo:**
 - [Gian, Julieta, Tobias]
 
@@ -477,7 +481,7 @@ El proyecto incluye un archivo completo de pruebas manuales para VS Code:
 
 ---
 
-## Scripts Disponibles
+## 🔧 Scripts Disponibles
 
 ```bash
 # Desarrollo
@@ -487,9 +491,65 @@ npm run dev          # Ejecutar en modo desarrollo con nodemon (auto-reload)
 npm start            # Ejecutar en modo producción (node)
 
 # Linting y Formateo
-npm run lint         # Verificar código con Biome (sin modificar)
+npm run lint         # Verificar código con Biome (usado en CI/CD)
 npm run format       # Formatear código con Biome (modifica archivos)
 ```
+
+---
+
+## 🔄 CI/CD Pipeline
+
+El proyecto implementa **Integración y Despliegue Continuo** con GitHub Actions.
+
+### **¿Qué hace automáticamente?**
+
+Cada vez que hacés `git push` a la rama `main`:
+
+1. 🔍 **Verifica el código** con Biome Linter
+2. 🚀 **Despliega automáticamente** a Render
+3. ✅ **Verifica que la API funcione** (health checks)
+4. 📧 **Te notifica** si algo falló
+
+### **Pipeline Workflow:**
+
+```
+git push → GitHub Actions → Lint → Deploy → Verify → ✅ Done
+```
+
+### **Ver el Estado:**
+
+- 📊 **Actions Tab:** https://github.com/JuuHood/THP2TrabajoPractico/actions
+- 🟢 Verde = Deploy exitoso
+- 🔴 Rojo = Algo falló (revisa logs)
+
+### **Verificar Antes de Push:**
+
+Antes de hacer `git push`, puedes verificar localmente que todo esté bien:
+
+```bash
+# En Windows (PowerShell)
+.\scripts\verify-pipeline.ps1
+
+# En Linux/Mac
+bash scripts/verify-pipeline.sh
+```
+
+Este script verifica:
+- ✅ Node.js instalado
+- ✅ Dependencias correctas
+- ✅ Lint pasa
+- ✅ Archivos críticos presentes
+- ✅ Variables de entorno configuradas
+
+### **Configuración del Deploy Hook:**
+
+Para que el deploy automático funcione:
+
+1. Ve a [Render Dashboard](https://dashboard.render.com)
+2. Abre tu servicio → Settings → Deploy Hook
+3. Copia la URL del hook
+4. En GitHub: Settings → Secrets → Actions
+5. Crea secret: `RENDER_DEPLOY_HOOK` con la URL
 
 ---
 
@@ -597,6 +657,14 @@ Las pruebas actualmente son **manuales** usando archivos `.http` con REST Client
 ### **Despliegue**
 La aplicación está desplegada en **Render** y es accesible públicamente en:  
 https://thp2trabajopractico-n1gj.onrender.com
+
+### **CI/CD Pipeline**
+El proyecto utiliza **GitHub Actions** para automatización:
+- **Deploy automático** a Render en cada push a `main`
+- **Verificación de código** con Biome Linter
+- **Health checks** post-deploy automáticos
+
+**Ver pipeline:** [GitHub Actions](https://github.com/JuuHood/THP2TrabajoPractico/actions)
 
 ---
 
