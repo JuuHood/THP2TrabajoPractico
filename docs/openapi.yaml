@@ -22,10 +22,10 @@ info:
     name: Equipo THP2
     
 servers:
+  - url: https://thp2trabajopractico-n1gj.onrender.com
+    description: Servidor de producción
   - url: http://localhost:3000
     description: Servidor de desarrollo
-  - url: https://tu-deploy.com
-    description: Servidor de producción
 
 tags:
   - name: Autenticación
