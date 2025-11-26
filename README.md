@@ -27,7 +27,6 @@ Este trabajo práctico busca que los estudiantes puedan aplicarse como desarroll
 - **URL Base:** https://thp2trabajopractico-n1gj.onrender.com
 - **Documentación Interactiva:** https://thp2trabajopractico-n1gj.onrender.com/api/docs
 
-> **Probala directamente desde Swagger UI** - No necesitas instalar nada localmente para probar la API.
 
 ---
 
@@ -141,7 +140,7 @@ tp2-proyecto-final/
 
 ## 🚀 Instalación y Configuración
 
-> **💡 Tip:** Si solo quieres probar la API, usa la versión en producción:  
+ 
 > https://thp2trabajopractico-n1gj.onrender.com/api/docs
 
 ### **Entornos Disponibles**
@@ -198,8 +197,6 @@ SUPABASE_KEY=tu-api-key-de-supabase
 
 Asegúrate de tener las tablas `usuarios`, `recetas` y `logs` creadas en tu proyecto de Supabase.
 
-> **Nota:** Si ya tienes el proyecto configurado con las tablas, salta este paso.
-
 ### **5. Iniciar el Servidor**
 
 **Modo desarrollo (con auto-reload):**
@@ -251,7 +248,7 @@ La API cuenta con documentación completa e interactiva generada con **Swagger/O
 - ✅ Interfaz "Try it out" para probar directamente desde el navegador
 - ✅ Autenticación JWT integrada (botón "Authorize")
 
-**Archivo fuente:** `docs/openapi.yaml` (730 líneas de especificación OpenAPI)
+**Archivo fuente:** `docs/openapi.yaml`
 
 ---
 
